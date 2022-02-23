@@ -1,54 +1,64 @@
-import { Box, Grid, MenuItem, Autocomplete, Button, TextField, Select, InputLabel, FormControl } from "@mui/material";
+import {
+  Box,
+  Grid,
+  MenuItem,
+  Button,
+  TextField,
+  Select,
+  InputLabel,
+  FormControl,
+  ListSubheader,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const useStyles = makeStyles({
   worker: {
     borderRadius: "5px",
     padding: "50px",
-    boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",
+    boxShadow:
+      "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",
   },
-  textField: {
-  },
-})
-
+  textField: {},
+});
 
 const initialValues = {
-  requestName: "",
-  description: "",
-  type: "",
-  file: "",
   priority: "",
-  note: ""
-}
+  note: "",
+};
 
 export const Chief = () => {
   const classes = useStyles();
-  const [values, setValues] = useState(initialValues)
+  const [values, setValues] = useState(initialValues);
+  const [data, setData] = useState({})
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(values)
-  }
-
-  const handleChange = e => {
+    console.log(values);
+  };
+  
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setValues({
       ...values,
-      [name]: value
+      [name]: value,
     });
-  }
+  };
+  
+
+  useEffect(() => {
+    const data = setData(JSON.parse(localStorage.getItem("worker")))
+    if(data) {
+      setData(data)
+    }
+  }, []);
+
+  console.log(data.priority);
 
   return (
-    <Box
-      className={classes.worker}
-    >
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
-      >
+    <Box className={classes.worker}>
+      <Box component="form" onSubmit={handleSubmit}>
         <Grid container spacing={2}>
-
           <Grid item xs={12}>
             <TextField
               disabled
@@ -57,7 +67,7 @@ export const Chief = () => {
               variant="outlined"
               label="Tələbin adı"
               name="requestName"
-              value={values.requestName}
+              value={data?.requestName}
               onChange={handleChange}
             />
           </Grid>
@@ -69,32 +79,41 @@ export const Chief = () => {
               className={classes.textField}
               name="description"
               label="Tələb açıqlama"
-              value={values.description}
+              value={data?.description}
               onChange={handleChange}
             />
           </Grid>
 
           <Grid item xs={12}>
-            <TextField
-              disabled
-              fullWidth
-              className={classes.textField}
-              name="type"
-              label="Tələbin növü"
-              value={values.type}
-              onChange={handleChange}
-            />
+            <FormControl fullWidth disabled>
+              <InputLabel id="priority">Tələbin növü</InputLabel>
+              <Select
+                className={classes.textField}
+                label="Tələbin növü"
+                name="type"
+                value={data?.type}
+                onChange={handleChange}
+              >
+                <ListSubheader>İstək</ListSubheader>
+                <MenuItem value="newRequest">Yeni istək</MenuItem>
+                <ListSubheader>Dəyişiklik</ListSubheader>
+                <MenuItem value="changeProgramNames">
+                  Dəyişiklik ediləcək proqram adları
+                </MenuItem>
+                <ListSubheader>Xəta</ListSubheader>
+                <MenuItem value="errorNames">Xəta olan proqram adları</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
 
           <Grid item xs={12}>
-            <FormControl fullWidth >
+            <FormControl fullWidth>
               <InputLabel id="priority">Prioritet</InputLabel>
               <Select
                 className={classes.textField}
                 label="Prioritet"
                 name="priority"
-                labelId="priority"
-                value={values.priority}
+                value={data?.priority}
                 onChange={handleChange}
               >
                 <MenuItem value="Low">Low</MenuItem>
@@ -111,7 +130,7 @@ export const Chief = () => {
               className={classes.textField}
               name="file"
               label="Texniki tapşırıq"
-              value={values.file}
+              value={data?.file}
               onChange={handleChange}
             />
           </Grid>
@@ -128,11 +147,12 @@ export const Chief = () => {
           </Grid>
 
           <Grid item xs={8}>
-            <Button variant="contained" type="submit">Gonder</Button>
+            <Button variant="contained" type="submit">
+              Göndər
+            </Button>
           </Grid>
-
         </Grid>
-      </Box >
+      </Box>
     </Box>
   );
 };

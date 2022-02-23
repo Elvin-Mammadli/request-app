@@ -1,4 +1,14 @@
-import { Box, Grid, MenuItem, Autocomplete, Button, TextField, Select, InputLabel, FormControl } from "@mui/material";
+import {
+  Box,
+  Grid,
+  MenuItem,
+  Button,
+  TextField,
+  Select,
+  InputLabel,
+  FormControl,
+  ListSubheader,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useState } from "react";
 
@@ -6,48 +16,41 @@ const useStyles = makeStyles({
   worker: {
     borderRadius: "5px",
     padding: "50px",
-    boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",
+    boxShadow:
+      "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",
   },
-  textField: {
-  },
-})
-
+  textField: {},
+});
 
 const initialValues = {
   requestName: "",
   description: "",
   type: "",
   file: "",
-  priority: ""
-}
+  priority: "",
+};
 
 export const Worker = () => {
   const classes = useStyles();
-  const [values, setValues] = useState(initialValues)
+  const [values, setValues] = useState(initialValues);
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(values)
-  }
+    localStorage.setItem("worker", JSON.stringify(values));
+  };
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setValues({
       ...values,
-      [name]: value
+      [name]: value,
     });
-  }
+  };
 
   return (
-    <Box
-      className={classes.worker}
-    >
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
-      >
+    <Box className={classes.worker}>
+      <Box component="form" onSubmit={handleSubmit}>
         <Grid container spacing={2}>
-
           <Grid item xs={12}>
             <TextField
               fullWidth
@@ -71,40 +74,31 @@ export const Worker = () => {
             />
           </Grid>
 
-          <Grid item xs={6}>
-            <TextField
-              fullWidth
-              className={classes.textField}
-              name="type"
-              label="Tələbin növü"
-              value={values.type}
-              onChange={handleChange}
-            />
-          </Grid>
-
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             <FormControl fullWidth>
-              <InputLabel id="priority">Prioritet</InputLabel>
+              <InputLabel id="priority">Tələbin növü</InputLabel>
               <Select
                 className={classes.textField}
-                label="Prioritet"
-                name="priority"
-                labelId="priority"
-                value={values.priority}
+                label="Tələbin növü"
+                name="type"
+                value={values.type}
                 onChange={handleChange}
               >
-                <MenuItem value="Low">Low</MenuItem>
-                <MenuItem value="Normal">Normal</MenuItem>
-                <MenuItem value="High">High</MenuItem>
+                <ListSubheader>İstək</ListSubheader>
+                <MenuItem value="newRequest">Yeni istək</MenuItem>
+                <ListSubheader>Dəyişiklik</ListSubheader>
+                <MenuItem value="changeProgramNames">Dəyişiklik ediləcək proqram adları</MenuItem>
+                <ListSubheader>Xəta</ListSubheader>
+                <MenuItem value="errorNames">Xəta olan proqram adları</MenuItem>
               </Select>
             </FormControl>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <FormControl fullWidth>
               {/* <InputLabel id="file">Prioritet</InputLabel> */}
               <TextField
-                labelId="file"
+                // labelId="file"
                 type="file"
                 fullWidth
                 className={classes.textField}
@@ -116,14 +110,13 @@ export const Worker = () => {
             </FormControl>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <FormControl fullWidth>
               <InputLabel id="priority">Prioritet</InputLabel>
               <Select
                 className={classes.textField}
                 label="Prioritet"
                 name="priority"
-                labelId="priority"
                 value={values.priority}
                 onChange={handleChange}
               >
@@ -135,11 +128,12 @@ export const Worker = () => {
           </Grid>
 
           <Grid item xs={8}>
-            <Button variant="contained" type="submit">Gonder</Button>
+            <Button variant="contained" type="submit">
+              Gonder
+            </Button>
           </Grid>
-
         </Grid>
-      </Box >
+      </Box>
     </Box>
   );
 };

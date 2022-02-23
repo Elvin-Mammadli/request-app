@@ -1,4 +1,4 @@
-import { Box, Grid, MenuItem, Autocomplete, Button, TextField, Select, InputLabel, FormControl } from "@mui/material";
+import { Box, Grid, MenuItem, Button, TextField, Select, InputLabel, FormControl } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useState } from "react";
 
@@ -19,7 +19,10 @@ const initialValues = {
   type: "",
   file: "",
   priority: "",
-  close: []
+  note: "",
+  close: [],
+  developmentOptions: "",
+
 }
 
 const endDatas = [
@@ -100,7 +103,6 @@ export const ITDepartment = () => {
                 className={classes.textField}
                 label="Prioritet"
                 name="priority"
-                labelId="priority"
                 value={values.priority}
                 onChange={handleChange}
               >
@@ -142,8 +144,7 @@ export const ITDepartment = () => {
                 className={classes.textField}
                 label="Proqramın yazılma növü"
                 name="developmentOptions"
-                labelId="developmentOptions"
-                value={values.priority}
+                value={values.developmentOptions}
                 onChange={handleChange}
               >
                 <MenuItem value="softwareDepartment">Proqram təminat şöbəsi tərəfindən yazılacaq</MenuItem>
@@ -161,7 +162,6 @@ export const ITDepartment = () => {
                 className={classes.textField}
                 label="Sonlandır"
                 name="close"
-                labelId="close"
                 value={values.close}
                 onChange={handleChange}
               >
