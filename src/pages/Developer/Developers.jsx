@@ -1,6 +1,16 @@
 import { DatePicker, LocalizationProvider } from "@mui/lab";
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import { Box, Grid, MenuItem, Autocomplete, Button, TextField, Select, InputLabel, FormControl, Chip } from "@mui/material";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import {
+  Box,
+  Grid,
+  MenuItem,
+  Autocomplete,
+  Button,
+  TextField,
+  Select,
+  InputLabel,
+  FormControl
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { format } from "date-fns";
 import { useState } from "react";
@@ -8,28 +18,18 @@ import { useState } from "react";
 const useStyles = makeStyles({
   worker: {
     borderRadius: "5px",
-    padding: "50px",
-    boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",
+    padding: "20px",
+    boxShadow:
+      "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",
   },
-  textField: {
-  },
-})
-
+});
 
 const initialValues = {
-  requestName: "",
-  description: "",
-  type: "",
-  file: "",
-  priority: "",
-  note: "",
-  close: "",
-  developmentOptions: "",
   timeRequired: "",
-  startDate: `${new Date()}`,
+  startDate: format(new Date(), "MM/dd/yyyy"),
   assignee: [],
   taskStatus: "",
-}
+};
 
 const taskStatuses = [
   { value: "backLog", text: "Backlog" },
@@ -37,161 +37,130 @@ const taskStatuses = [
   { value: "inProgress", text: "In Progress" },
   { value: "testing", text: "Testing" },
   { value: "done", text: "Done" },
-  { value: "waitingInfo", text: "Tələb edən şəxsdən məlumat gözlənilir" }
-]
+  { value: "waitingInfo", text: "Tələb edən şəxsdən məlumat gözlənilir" },
+];
 
 export const Developer = () => {
   const classes = useStyles();
-  const [values, setValues] = useState(initialValues)
+  const [values, setValues] = useState(() => {
+    let temp = JSON.parse(localStorage.getItem("request"));
+    return {
+      ...initialValues,
+      ...temp,
+    };
+  });
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(values)
-  }
+    localStorage.setItem("request", JSON.stringify(values));
+  };
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setValues({
       ...values,
-      [name]: value
+      [name]: value,
     });
-  }
+  };
 
-  const dateHandleChange = date => {
-    let time = format(date, "dd/MM/yyy");
+  const dateHandleChange = (date) => {
+    let time = format(date, "MM/dd/yyyy");
     setValues({
       ...values,
-      startDate: time
+      startDate: time,
     });
+  };
 
-    console.log(time)
-  }
+ 
 
   return (
-    <Box
-      className={classes.worker}
-    >
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
-      >
+    <Box className={classes.worker}>
+      <Box component="form" onSubmit={handleSubmit}>
         <Grid container spacing={2}>
-
-        <Grid item xs={6}>
+          <Grid item lg={6}>
             <TextField
               disabled
               fullWidth
-              className={classes.textField}
-              variant="outlined"
               label="Tələbin adı"
-              name="requestName"
-              value={values.requestName}
-              onChange={handleChange}
+              defaultValue={values.requestName}
             />
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid item xs={12} lg={6}>
             <TextField
               disabled
               fullWidth
-              className={classes.textField}
-              name="description"
               label="Tələb açıqlama"
-              value={values.description}
-              onChange={handleChange}
+              defaultValue={values.description}
             />
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid item xs={12} lg={6}>
             <TextField
               disabled
               fullWidth
-              className={classes.textField}
-              name="type"
               label="Tələbin növü"
-              value={values.type}
-              onChange={handleChange}
+              defaultValue={values.type}
             />
           </Grid>
 
-          <Grid item xs={6}>
-            <FormControl fullWidth>
-              <InputLabel id="priority">Prioritet</InputLabel>
-              <Select
-                className={classes.textField}
-                label="Prioritet"
-                name="priority"
-                value={values.priority}
-                onChange={handleChange}
-              >
-                <MenuItem value="Low">Low</MenuItem>
-                <MenuItem value="Normal">Normal</MenuItem>
-                <MenuItem value="High">High</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-
-          <Grid item xs={6}>
+          <Grid item xs={12} lg={6}>
             <TextField
               disabled
               fullWidth
-              className={classes.textField}
-              name="file"
+              label="Prioritet"
+              defaultValue={values.priority}
+            />
+          </Grid>
+
+          <Grid item xs={12} lg={6}>
+            <TextField
+              disabled
+              fullWidth
               label="Texniki tapşırıq"
-              value={values.file}
-              onChange={handleChange}
+              defaultValue={values.file}
             />
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid item xs={12} lg={6}>
             <TextField
-            disabled
+              disabled
               fullWidth
-              className={classes.textField}
-              name="note"
-              label="Qeyd"
-              value={values.note}
-              onChange={handleChange}
+              label="Departament rəhbərinin qeydi"
+              defaultValue={values.chiefNote || "yoxdur"}
             />
           </Grid>
 
-
-          <Grid item xs={12}>
-            <FormControl fullWidth disabled>
-              <InputLabel id="developmentOptions">Proqramın yazılma növü</InputLabel>
-              <Select
-                className={classes.textField}
-                label="Proqramın yazılma növü"
-                name="developmentOptions"
-                value={values.developmentOptions}
-                onChange={handleChange}
-              >
-                <MenuItem value="softwareDepartment">Proqram təminat şöbəsi tərəfindən yazılacaq</MenuItem>
-                <MenuItem value="packet">Hazır paket alınacaq</MenuItem>
-                <MenuItem value="outsource">Outsource ediləcək</MenuItem>
-              </Select>
-            </FormControl>
+          <Grid item xs={12} lg={6}>
+            <TextField
+              disabled
+              fullWidth
+              label="IT şöbəsinin qeydi"
+              defaultValue={values.ITnote || "yoxdur"}
+            />
           </Grid>
 
-          <Grid item xs={12}>
-            <FormControl fullWidth disabled>
-              <InputLabel id="close">Sonlandır</InputLabel>
-              <Select
-                multiple
-                className={classes.textField}
-                label="Sonlandır"
-                name="close"
-                value={values.close}
-                onChange={handleChange}
-              >
-              </Select>
-            </FormControl>
+          <Grid item xs={12} lg={6}>
+            <TextField
+              disabled
+              fullWidth
+              label="Proqramın yazılma növü"
+              defaultValue={values.developmentOptions}
+            />
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={12} lg={6}>
+            <TextField
+              disabled
+              fullWidth
+              label="Sonlandır"
+              defaultValue={values.close}
+            />
+          </Grid>
+
+          <Grid item xs={12} lg={6}>
             <TextField
               fullWidth
-              className={classes.textField}
               variant="outlined"
               label="Taskın icra müddəti"
               name="timeRequired"
@@ -200,68 +169,66 @@ export const Developer = () => {
             />
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={12} lg={6}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DatePicker
-              className={classes.textField}
-              name="startDate"
-              label="Təxmini başlama vaxtı"
-              value={values.startDate}
-              onChange={dateHandleChange}
-              renderInput={(params) => <TextField fullWidth {...params} />}
-            />
+              <DatePicker
+                name="startDate"
+                label="Təxmini başlama vaxtı"
+                value={values.startDate}
+                onChange={dateHandleChange}
+                renderInput={(params) => <TextField fullWidth {...params} />}
+              />
             </LocalizationProvider>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={12} lg={6}>
             <Autocomplete
-              fullWidth
               multiple
               name="assignee"
-              // label="visitors"
               options={[]}
               freeSolo
-              getOptionLabel={option => option}
-              // onChange={(e, value) => setReceivers((state) => value)}
-              renderTags={(value, getTagProps) =>
-                value.map((option, index) => (
-                  <Chip label={option} {...getTagProps({ index })} />
-                ))
-              }
+              onChange={(e) => {
+                let name = e.target.value;
+                let temp = [...values.assignee, name]
+                setValues({
+                  ...values,
+                  assignee: temp
+                })
+              }}
+ 
               renderInput={(params) => {
-                return <TextField
-                  {...params}
-                  label="Məsul şəxslər"
-                // placeholder="Gələcək şəxs"
-                />
+                return (
+                  <TextField fullWidth {...params} label="Məsul şəxslər" />
+                );
               }}
             />
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={12} lg={6}>
             <FormControl fullWidth>
               <InputLabel id="TaskStatus">Task Status</InputLabel>
               <Select
-                className={classes.textField}
                 label="Task Status"
                 name="taskStatus"
-                // labelId="TaskStatus"
                 value={values.taskStatus}
                 onChange={handleChange}
               >
                 {taskStatuses.map((item, index) => (
-                  <MenuItem key={index} value={item.value}>{item.text}</MenuItem>
+                  <MenuItem key={index} value={item.value}>
+                    {item.text}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
           </Grid>
 
-          <Grid item xs={8}>
-            <Button variant="contained" type="submit">Gonder</Button>
+          <Grid item xs={12}>
+            <Button variant="contained" type="submit">
+              Gonder
+            </Button>
           </Grid>
-
         </Grid>
-      </Box >
+      </Box>
     </Box>
   );
 };

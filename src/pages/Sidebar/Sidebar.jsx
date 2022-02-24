@@ -28,7 +28,7 @@ const Sidebar = () => {
   const classes = useStyles();
   return (
     <Box className={classes.sideBar} >
-      <Link className={classes.link} to="/worker">Worker</Link>
+      <Link className={classes.link} to="/">Worker</Link>
       <Link className={classes.link} to="/chief">Head of Department</Link>
       <Link className={classes.link} to="/it">IT Department</Link>
       <Link className={classes.link} to="/development">Software development</Link>

@@ -7,10 +7,9 @@ import {
   Select,
   InputLabel,
   FormControl,
-  ListSubheader,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const useStyles = makeStyles({
   worker: {
@@ -24,17 +23,22 @@ const useStyles = makeStyles({
 
 const initialValues = {
   priority: "",
-  note: "",
+  chiefNote: "",
 };
 
 export const Chief = () => {
   const classes = useStyles();
-  const [values, setValues] = useState(initialValues);
-  const [data, setData] = useState({})
+  const [values, setValues] = useState(() => {
+    let temp = JSON.parse(localStorage.getItem("request"))
+    return {
+      ...initialValues,
+      ...temp
+    }
+  });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
-    console.log(values);
+    localStorage.setItem("request", JSON.stringify(values));
   };
   
   const handleChange = (e) => {
@@ -44,16 +48,6 @@ export const Chief = () => {
       [name]: value,
     });
   };
-  
-
-  useEffect(() => {
-    const data = setData(JSON.parse(localStorage.getItem("worker")))
-    if(data) {
-      setData(data)
-    }
-  }, []);
-
-  console.log(data.priority);
 
   return (
     <Box className={classes.worker}>
@@ -64,11 +58,8 @@ export const Chief = () => {
               disabled
               fullWidth
               className={classes.textField}
-              variant="outlined"
               label="Tələbin adı"
-              name="requestName"
-              value={data?.requestName}
-              onChange={handleChange}
+              defaultValue={values.requestName}
             />
           </Grid>
 
@@ -77,33 +68,20 @@ export const Chief = () => {
               disabled
               fullWidth
               className={classes.textField}
-              name="description"
               label="Tələb açıqlama"
-              value={data?.description}
-              onChange={handleChange}
+              defaultValue={values.description}
             />
           </Grid>
 
           <Grid item xs={12}>
-            <FormControl fullWidth disabled>
-              <InputLabel id="priority">Tələbin növü</InputLabel>
-              <Select
-                className={classes.textField}
-                label="Tələbin növü"
-                name="type"
-                value={data?.type}
-                onChange={handleChange}
-              >
-                <ListSubheader>İstək</ListSubheader>
-                <MenuItem value="newRequest">Yeni istək</MenuItem>
-                <ListSubheader>Dəyişiklik</ListSubheader>
-                <MenuItem value="changeProgramNames">
-                  Dəyişiklik ediləcək proqram adları
-                </MenuItem>
-                <ListSubheader>Xəta</ListSubheader>
-                <MenuItem value="errorNames">Xəta olan proqram adları</MenuItem>
-              </Select>
-            </FormControl>
+
+          <TextField
+              disabled
+              fullWidth
+              className={classes.textField}
+              label="Tələbin növü"
+              defaultValue={values.type}
+            />
           </Grid>
 
           <Grid item xs={12}>
@@ -113,7 +91,7 @@ export const Chief = () => {
                 className={classes.textField}
                 label="Prioritet"
                 name="priority"
-                value={data?.priority}
+                value={values.priority}
                 onChange={handleChange}
               >
                 <MenuItem value="Low">Low</MenuItem>
@@ -128,10 +106,8 @@ export const Chief = () => {
               disabled
               fullWidth
               className={classes.textField}
-              name="file"
               label="Texniki tapşırıq"
-              value={data?.file}
-              onChange={handleChange}
+              defaultValue={values.file}
             />
           </Grid>
 
@@ -139,8 +115,8 @@ export const Chief = () => {
             <TextField
               fullWidth
               className={classes.textField}
-              name="note"
-              label="Qeyd"
+              name="chiefNote"
+              label="Departament rəhbərinin qeydi"
               value={values.note}
               onChange={handleChange}
             />

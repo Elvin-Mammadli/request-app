@@ -1,4 +1,13 @@
-import { Box, Grid, MenuItem, Button, TextField, Select, InputLabel, FormControl } from "@mui/material";
+import {
+  Box,
+  Grid,
+  MenuItem,
+  Button,
+  TextField,
+  Select,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useState } from "react";
 
@@ -6,69 +15,69 @@ const useStyles = makeStyles({
   worker: {
     borderRadius: "5px",
     padding: "50px",
-    boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",
+    boxShadow:
+      "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",
   },
-  textField: {
-  },
-})
-
+  textField: {},
+});
 
 const initialValues = {
-  requestName: "",
-  description: "",
-  type: "",
-  file: "",
   priority: "",
-  note: "",
+  ITnote: "",
   close: [],
   developmentOptions: "",
-
-}
+};
 
 const endDatas = [
-  {value: 1, text: "İstək sistemdə mövcuddur"},
-  {value: 2, text: "Biznes tələblərə uyğun deyil"},
-  {value: 3, text: "Texniki olaraq uyğun deyil"},
-  {value: 4, text: "Qeyd edilən xəta sistemdə mövcud deyil"}
-]
+  { value: "İstək sistemdə mövcuddur", text: "İstək sistemdə mövcuddur" },
+  { value: "Biznes tələblərə uyğun deyil", text: "Biznes tələblərə uyğun deyil" },
+  { value: "Texniki olaraq uyğun deyil", text: "Texniki olaraq uyğun deyil" },
+  { value: "Qeyd edilən xəta sistemdə mövcud deyil", text: "Qeyd edilən xəta sistemdə mövcud deyil" },
+];
+
+const developmentOptions = [
+  {
+    value: "Proqram təminat şöbəsi tərəfindən yazılacaq",
+    label: "Proqram təminat şöbəsi tərəfindən yazılacaq",
+  },
+  { value: "Hazır paket alınacaq", label: "Hazır paket alınacaq" },
+  { value: "Outsource ediləcək", label: "Outsource ediləcək" },
+];
 
 export const ITDepartment = () => {
   const classes = useStyles();
-  const [values, setValues] = useState(initialValues)
+  const [values, setValues] = useState(() => {
+    let temp = JSON.parse(localStorage.getItem("request"));
+    return {
+      ...initialValues,
+      ...temp,
+    };
+  });
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(values)
-  }
+    localStorage.setItem("request", JSON.stringify(values));
+  };
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setValues({
       ...values,
-      [name]: value
+      [name]: value,
     });
-  }
+  };
 
   return (
-    <Box
-    className={classes.worker}
-    >
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
-      >
+    <Box className={classes.worker}>
+      <Box component="form" onSubmit={handleSubmit}>
         <Grid container spacing={2}>
-
-        <Grid item xs={12}>
+          <Grid item xs={12}>
             <TextField
               disabled
               fullWidth
               className={classes.textField}
-              variant="outlined"
               label="Tələbin adı"
-              name="requestName"
-              value={values.requestName}
-              onChange={handleChange}
+              defaultValue={values.requestName}
             />
           </Grid>
 
@@ -77,10 +86,8 @@ export const ITDepartment = () => {
               disabled
               fullWidth
               className={classes.textField}
-              name="description"
               label="Tələb açıqlama"
-              value={values.description}
-              onChange={handleChange}
+              defaultValue={values.description}
             />
           </Grid>
 
@@ -89,10 +96,8 @@ export const ITDepartment = () => {
               disabled
               fullWidth
               className={classes.textField}
-              name="type"
               label="Tələbin növü"
-              value={values.type}
-              onChange={handleChange}
+              defaultValue={values.type}
             />
           </Grid>
 
@@ -118,10 +123,8 @@ export const ITDepartment = () => {
               disabled
               fullWidth
               className={classes.textField}
-              name="file"
               label="Texniki tapşırıq"
-              value={values.file}
-              onChange={handleChange}
+              defaultValue={values.file}
             />
           </Grid>
 
@@ -129,17 +132,28 @@ export const ITDepartment = () => {
             <TextField
               fullWidth
               className={classes.textField}
-              name="note"
-              label="Qeyd"
-              value={values.note}
+              name="ITnote"
+              label="IT şöbəsinin qeydi"
+              value={values.ITnote}
               onChange={handleChange}
             />
           </Grid>
 
+          <Grid item xs={12}>
+            <TextField
+              disabled
+              fullWidth
+              className={classes.textField}
+              label="Departament rəhbərinin qeydi"
+              defaultValue={values.chiefNote || "yoxdur"}
+            />
+          </Grid>
 
           <Grid item xs={12}>
             <FormControl fullWidth>
-              <InputLabel id="developmentOptions">Proqramın yazılma növü</InputLabel>
+              <InputLabel id="developmentOptions">
+                Proqramın yazılma növü
+              </InputLabel>
               <Select
                 className={classes.textField}
                 label="Proqramın yazılma növü"
@@ -147,9 +161,9 @@ export const ITDepartment = () => {
                 value={values.developmentOptions}
                 onChange={handleChange}
               >
-                <MenuItem value="softwareDepartment">Proqram təminat şöbəsi tərəfindən yazılacaq</MenuItem>
-                <MenuItem value="packet">Hazır paket alınacaq</MenuItem>
-                <MenuItem value="outsource">Outsource ediləcək</MenuItem>
+                {developmentOptions.map((item,index) => (
+                  <MenuItem key={index} value={item.value}>{item.label}</MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
@@ -166,18 +180,21 @@ export const ITDepartment = () => {
                 onChange={handleChange}
               >
                 {endDatas.map((item, index) => (
-                  <MenuItem key={index} value={item.value}>{item.text}</MenuItem>
+                  <MenuItem key={index} value={item.value}>
+                    {item.text}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
           </Grid>
 
           <Grid item xs={8}>
-            <Button variant="contained" type="submit">Gonder</Button>
+            <Button variant="contained" type="submit">
+              Gonder
+            </Button>
           </Grid>
-
         </Grid>
-      </Box >
+      </Box>
     </Box>
   );
 };

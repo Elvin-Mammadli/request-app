@@ -36,7 +36,7 @@ export const Worker = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    localStorage.setItem("worker", JSON.stringify(values));
+    localStorage.setItem("request", JSON.stringify(values));
   };
 
   const handleChange = (e) => {
@@ -85,7 +85,7 @@ export const Worker = () => {
                 onChange={handleChange}
               >
                 <ListSubheader>İstək</ListSubheader>
-                <MenuItem value="newRequest">Yeni istək</MenuItem>
+                <MenuItem value="Yeni istək">Yeni istək</MenuItem>
                 <ListSubheader>Dəyişiklik</ListSubheader>
                 <MenuItem value="changeProgramNames">Dəyişiklik ediləcək proqram adları</MenuItem>
                 <ListSubheader>Xəta</ListSubheader>

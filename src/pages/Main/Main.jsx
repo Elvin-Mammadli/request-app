@@ -9,7 +9,7 @@ import { Worker } from "../Worker/Worker";
 const useStyles = makeStyles({
   main: {
     width: "80%",
-    padding: "10%",
+    padding: "50px",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -23,7 +23,7 @@ const Main = () => {
   return (
     <Box className={classes.main}>
       <Routes>
-        <Route path="/worker" element={<Worker />} />
+        <Route path="/" element={<Worker />} />
         <Route path="/chief" element={<Chief />} />
         <Route path="/it" element={<ITDepartment />} />
         <Route path="/development" element={<Developer />} />
